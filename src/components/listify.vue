@@ -2,7 +2,20 @@
 import { ref } from 'vue';
 
 const showInput = ref(false);
-const activities = ref([]);
+const activities = ref([
+  {
+    text: 'Mengumpulkan UTS PBK',
+    date: '2025-05-09',
+    time: '23:00',
+    done: false
+  },
+  {
+    text: 'Rapat Organisasi',
+    date: '2025-05-10',
+    time: '10:30',
+    done: true
+  }
+]);
 </script>
 
 <template>
@@ -14,6 +27,21 @@ const activities = ref([]);
           <p>Kelola kegiatan harianmu dengan efisien.</p>
         </div>
         
+        <div class="activity-list">
+          <h2>Kegiatan</h2>
+          <ul>
+            <li v-for="(activity, index) in activities" :key="index" class="task-item">
+              <div class="task-content">
+                <span>
+                  <strong>{{ activity.text }} - </strong> 
+                  <span class="task-details">
+                    {{ activity.date || 'Tanpa tanggal' }} {{ activity.time ? '• ' + activity.time : '' }}
+                  </span>
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
