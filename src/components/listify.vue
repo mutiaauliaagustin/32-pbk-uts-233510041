@@ -1,7 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const showInput = ref(false);
+const statusFilter = ref('all');
+
 const activities = ref([
   {
     text: 'Mengumpulkan UTS PBK',
@@ -24,6 +26,12 @@ const newActivity = ref({
   done: false
 });
 
+const filteredActivities = computed(() => {
+  if (statusFilter.value === 'all') return activities.value;
+  if (statusFilter.value === 'pending') return activities.value.filter(a => !a.done);
+  return activities.value.filter(a => a.done);
+});
+
 function addActivity() {
   if (newActivity.value.text.trim() !== '') {
     activities.value.push({ ...newActivity.value });
@@ -33,7 +41,10 @@ function addActivity() {
 }
 
 function deleteActivity(index) {
-  activities.value.splice(index, 1);
+  const actualIndex = activities.value.indexOf(filteredActivities.value[index]);
+  if (actualIndex !== -1) {
+    activities.value.splice(actualIndex, 1);
+  }
 }
 </script>
 
@@ -49,6 +60,24 @@ function deleteActivity(index) {
         <div class="add">
           <div @click="showInput = !showInput" class="clickable">
             {{ showInput ? '✕ Batal' : '✚ Tambah Tugas' }}
+          </div>
+
+          <div class="filter-controls">
+            <div 
+              class="item" 
+              :class="{ active: statusFilter === 'all' }" 
+              @click="statusFilter = 'all'"
+            >Semua</div>
+            <div 
+              class="item" 
+              :class="{ active: statusFilter === 'pending' }" 
+              @click="statusFilter = 'pending'"
+            >Tertunda</div>
+            <div 
+              class="item" 
+              :class="{ active: statusFilter === 'completed' }" 
+              @click="statusFilter = 'completed'"
+            >Selesai</div>
           </div>
 
           <div v-if="showInput" class="popup-modal">
@@ -69,16 +98,19 @@ function deleteActivity(index) {
 
         <div class="activity-list">
           <h2>Kegiatan</h2>
+          <p v-if="filteredActivities.length === 0" class="empty-state">
+            Tidak ada tugas untuk ditampilkan.
+          </p>
           <ul>
             <li 
-              v-for="(activity, index) in activities" 
+              v-for="(activity, index) in filteredActivities" 
               :key="index" 
               class="task-item"
               :class="{ completed: activity.done }"
             >
               <div class="task-content">
                 <span>
-                  <strong>{{ activity.text }} - </strong> 
+                  <strong>{{ activity.text }} </strong> 
                   <span class="task-details">
                     {{ activity.date || 'Tanpa tanggal' }} {{ activity.time ? '• ' + activity.time : '' }}
                   </span>
