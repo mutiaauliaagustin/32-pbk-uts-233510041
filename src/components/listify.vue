@@ -19,7 +19,7 @@ const activities = ref([
     },
     {
         text: 'Rapat Organisasi',
-        date: '2025-05-10',
+        date: '2025-05-05',
         time: '10:30',
         done: true
     }
@@ -107,7 +107,7 @@ const filteredActivities = computed(() => {
                 <div class="activity-list">
                     <h2>Kegiatan</h2>
                     <p v-if="filteredActivities.length === 0" class="empty-state">
-                        Tidak ada tugas untuk ditampilkan. Tambahkan tugas pertama Anda untuk memulai!
+                        Tidak ada tugas untuk ditampilkan. Tambahkan tugas pertama untuk memulai!
                     </p>
                     <ul>
                         <li v-for="(activity, index) in filteredActivities" :key="index" class="task-item">
