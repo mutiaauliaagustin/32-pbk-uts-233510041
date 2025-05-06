@@ -16,6 +16,21 @@ const activities = ref([
     done: true
   }
 ]);
+
+const newActivity = ref({
+  text: '',
+  date: '',
+  time: '',
+  done: false
+});
+
+function addActivity() {
+  if (newActivity.value.text.trim() !== '') {
+    activities.value.push({ ...newActivity.value });
+    newActivity.value = { text: '', date: '', time: '', done: false };
+    showInput.value = false;
+  }
+}
 </script>
 
 <template>
@@ -27,6 +42,27 @@ const activities = ref([
           <p>Kelola kegiatan harianmu dengan efisien.</p>
         </div>
         
+        <div class="add">
+          <div @click="showInput = !showInput" class="clickable">
+            {{ showInput ? '✕ Batal' : '✚ Tambah Tugas' }}
+          </div>
+
+          <div v-if="showInput" class="popup-modal">
+            <div class="popup-content">
+              <h3>Tambah Tugas Baru</h3>
+              <div class="popup-input">
+                <input v-model="newActivity.text" placeholder="Apa yang perlu dilakukan?" />
+                <input type="date" v-model="newActivity.date" />
+                <input type="time" v-model="newActivity.time" />
+              </div> 
+              <div class="popup-btn">
+                <button @click="addActivity">Tambahkan</button>
+                <button @click="showInput = false">Batal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="activity-list">
           <h2>Kegiatan</h2>
           <ul>
