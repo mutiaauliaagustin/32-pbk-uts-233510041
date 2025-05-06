@@ -31,6 +31,10 @@ function addActivity() {
     showInput.value = false;
   }
 }
+
+function deleteActivity(index) {
+  activities.value.splice(index, 1);
+}
 </script>
 
 <template>
@@ -66,7 +70,12 @@ function addActivity() {
         <div class="activity-list">
           <h2>Kegiatan</h2>
           <ul>
-            <li v-for="(activity, index) in activities" :key="index" class="task-item">
+            <li 
+              v-for="(activity, index) in activities" 
+              :key="index" 
+              class="task-item"
+              :class="{ completed: activity.done }"
+            >
               <div class="task-content">
                 <span>
                   <strong>{{ activity.text }} - </strong> 
@@ -74,6 +83,20 @@ function addActivity() {
                     {{ activity.date || 'Tanpa tanggal' }} {{ activity.time ? '• ' + activity.time : '' }}
                   </span>
                 </span>
+              </div>
+              <div class="task-actions">
+                <input 
+                  type="checkbox" 
+                  v-model="activity.done" 
+                  :id="'task-' + index"
+                />
+                <button 
+                  @click="deleteActivity(index)" 
+                  class="delete-btn" 
+                  title="Hapus tugas"
+                >
+                  ❌
+                </button>
               </div>
             </li>
           </ul>
